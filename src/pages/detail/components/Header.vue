@@ -1,7 +1,9 @@
 <template>
   <div>
     <router-link v-show="showAbs" tag="div" to="/" class="header-abs">
-      <div class="iconfont back-icon header-abs-back">返回</div>
+      <div class="iconfont back-icon header-abs-back">
+        <span style="color: #fff">&#xe6ff;</span>
+      </div>
     </router-link>
     <div class="header-fixed" v-show="!showAbs"  :style="opacityStyle">
       <router-link to="/">
@@ -58,9 +60,10 @@ export default {
     line-height .8rem
     border-radius .4rem
     text-align center
-    background rgba(0,0,0,.8)
+    background-color: #000
+    color #ffffff
+    opacity: .5
     .header-abs-back
-      color #ffffff
       font-size .4rem
   .header-fixed
     z-index 20

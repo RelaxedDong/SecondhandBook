@@ -3,9 +3,19 @@
       <div style="padding-bottom: 1.5rem;" id="startpage"></div>
       <div class="commentBox">
         回应(<span ref="counter">{{comments.length}}</span>)
-        <div class="addcomment">
+        <div class="addBtn" @click="showcommentBox">
+          <span class="iconfont addicon">&#xe602;</span>
+        </div>
+        <div class="addcomment" v-show="isshowArea">
+          <div class="emotionbox" v-show="ishowemotion">
+            <span v-for="(emotion,index) in emotions" :key="index">
+              <img @click="emotionimgclick" :src="emotion.icon" alt="" :title="emotion.value">
+            </span>
+          </div>
           <alert class="alertbox"></alert>
-          <span @click="returnreplay">切换回默认回复</span>
+            <span @click="returnreplay" class="iconfont xunhuan">&#xe604;</span>
+            <span @click="emotionBtnclick" class="iconfont">&#xe61d;</span>
+            <span @click="closeareashow" class="iconfont close">&#xe613;</span>
           <textarea :placeholder="placeholder" v-model="textareainput"></textarea>
           <button ref="replay" @click="replaynow">添加回应</button>
         </div>
@@ -17,7 +27,7 @@
               <span>{{comment.create_time}}</span>
             </div>
             <div class="comemnt-content">
-              {{comment.content}}
+              <span v-html="$options.filters.filemotion(comment.content)"></span>
             </div>
             <div v-if="comment.origin_comment.author.username" class="quto">
               引用： <a href="">@{{comment.origin_comment.author.username}}</a>的评论
@@ -43,15 +53,41 @@ export default {
   comments: {
     Alert
   },
+  filters: {
+    filemotion (value) {
+      value = value.replace(/##(.+?)##/g, (e, e1) => {
+        return '<img src="http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/' + e1 + '">'
+      })
+      return value
+    }
+  },
   data () {
     return {
       placeholder: '输入评论......',
       textareainput: '',
       commentId: '',
-      current_userid: ''
+      current_userid: '',
+      isshowArea: false,
+      ishowemotion: false,
+      emotions: []
     }
   },
   methods: {
+    emotionimgclick (e) {
+      const url = e.target.getAttribute('src')
+      const emotiontag = url.split('http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/')[1]
+      this.textareainput += '##' + emotiontag + '##'
+    },
+    emotionBtnclick () {
+      this.ishowemotion = true
+    },
+    closeareashow () {
+      this.isshowArea = false
+      this.ishowemotion = false
+    },
+    showcommentBox () {
+      this.isshowArea = true
+    },
     handleemit (message, color) {
       this.$store.commit('msgchange', {message: message, color: color})
     },
@@ -111,6 +147,9 @@ export default {
     }
   },
   mounted () {
+    axios.get('/api/emotions/').then((res) => {
+      this.emotions = res.data.data
+    })
     var oldToken = localStorage.getItem('token')
     if (oldToken) {
       axios.post('/api/userinfo/', {token: oldToken}).then(this.currentUser)
@@ -121,6 +160,16 @@ export default {
 
 <style scoped lang="stylus">
   .commentBox
+    .addBtn
+      padding .1rem
+      position fixed
+      right .3rem
+      bottom .3rem
+      background #ffc043
+      border-radius 50%
+      .addicon
+        color #ffffff
+        font-size .5rem
     .addcomment
       background #ffffff
       position fixed
@@ -130,6 +179,15 @@ export default {
       font-weight bold
       bottom 0
       box-sizing border-box
+      .emotionbox
+        padding .1rem
+        z-index 999
+        span
+          margin .02rem
+      .iconfont
+        font-size .5rem
+      .close
+        float right
       textarea
         height 2rem
         border .1rem solid #fcfcfc

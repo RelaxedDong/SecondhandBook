@@ -10,20 +10,21 @@
       </div>
       <div class="author_info">
         <div class="item">
-          <span class="item_name">价格:</span>
-          <span class="item_value">￥{{book.price}}</span>
-        </div>
-        <div class="item">
-          <span class="item_name">作者:</span>
-          <span class="author_name">{{book.author}}</span>
-        </div>
-        <div class="item">
-          <span class="item_name">邮箱:</span>
-          <span class="item_value">{{book.owner.email}}</span>
+          <span class="item_name">邮箱: </span>
+          <div class="item_value">
+            <span class="iconfont">&#xe68b;</span>{{book.owner.email}}</div>
         </div>
         <div class="item border-bottom">
-          <span class="item_name">出版社:</span>
-          <span class="item_value">{{book.Publishing}}</span>
+          <span class="item_name">出版:</span>
+          <div class="item_value"><span class="iconfont">&#xe9e3;</span>{{book.Publishing}}</div>
+        </div>
+        <div class="item border-bottom">
+          <span class="item_name">价格:</span>
+          <div class="item_value"><span class="iconfont">&#xe641;</span>{{book.price}}</div>
+        </div>
+        <div class="item border-bottom">
+          <span class="item_name">作者:</span>
+          <div class="item_value"><span style="color: #72c462" class="iconfont">&#xe67b;</span>{{book.author}}</div>
         </div>
       </div>
       <div class="sell_desc">
@@ -79,18 +80,25 @@ export default {
       margin-top .2rem
       .item
         margin-top .2rem
+        .item_value
+          display inline
+          .iconfont
+            margin-right .1rem
         .item_name
           font: 12px Arial, Helvetica, sans-serif;
           line-height: 150%;
-          color: #666666;
           font-size .3rem
-        .author_name
-          color #38ff82
+          margin-right .2rem
     .sell_desc
       margin-top .2rem
       padding-bottom 1rem
       overflow hidden
       .desc
         margin-top .2rem
-        letter-spacing:1px;
+        word-break: break-all;
+        word-wrap: break-word;
+        line-height: .42rem;
+        font-size: .28rem;
+        color: #616161;
+        text-indent .2rem
 </style>

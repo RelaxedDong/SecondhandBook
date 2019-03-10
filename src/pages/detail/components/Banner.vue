@@ -5,7 +5,7 @@
            class="banner-img" alt="">
       <div class="banner-info">
         <div class="banner-title">{{bookname}}</div>
-        <div class="banner-number"><span class="iconfont banner-icon">&#xe6bc;</span>39</div>
+        <div class="banner-number"><span style="color: #ff92b2" class="iconfont banner-icon">&#xe6c4;</span>39</div>
       </div>
     </div>
     <fade>
@@ -69,8 +69,9 @@ export default {
         height .32rem
         font-size .24rem
         border-radius .2rem
-        background rgba(0, 0, 0, 8)
+        background rgba(0, 0, 0, 0.5)
         .banner-icon
           font-size .24rem
           padding .02rem
+          margin-right .05rem
 </style>
