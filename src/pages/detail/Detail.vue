@@ -3,7 +3,7 @@
     <detail-banner :images="images" :bookname="bookname" :face="face"></detail-banner>
     <detail-header></detail-header>
     <detail-book :book="book"></detail-book>
-    <detail-comment></detail-comment>
+    <detail-comment :bookid="book.id" :comments="comments"></detail-comment>
   </div>
 </template>
 
@@ -22,14 +22,16 @@ export default {
       },
       images: [],
       face: '',
-      bookname: ''
+      bookname: '',
+      comments: [],
+      commentslen: ''
     }
   },
   components: {
     DetailComment,
     DetailHeader,
     DetailBanner,
-    DetailBook,
+    DetailBook
   },
   mounted () {
     const id = this.$route.path.substr(8)
@@ -38,6 +40,7 @@ export default {
   methods: {
     handleData (res) {
       const data = res.data
+      this.comments = data.comments
       this.book = data
       this.bookname = data.name
       this.face = data.images[0].url
@@ -46,7 +49,6 @@ export default {
         arr[i] = data.images[i].url
       }
       this.images = arr
-      console.log(arr)
     }
   }
 }

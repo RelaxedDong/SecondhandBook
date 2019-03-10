@@ -73,6 +73,7 @@ export default {
       if (res.status === 200 && data) {
         if (data.code === 200) {
           this.handleemit('身份验证成功,请稍后...', '#b1ff5b')
+          // this.$store.commit('pushuserid')
           setTimeout(() => {
             this.$router.push('/me')
             localStorage.setExpire('token', res.headers.token, 1000 * 60 * 60 * 24 * 2) // 设置两天过期

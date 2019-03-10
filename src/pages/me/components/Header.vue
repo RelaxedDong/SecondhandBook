@@ -36,13 +36,13 @@
           <div class="iconname">喜欢</div>
           <span class="rightcion">></span>
         </li>
-        <li>
+        <router-link tag="li" to="/comments">
           <div class="icon">
             <span class="iconfont" style="color: #77ff5e">&#xe608;</span>
           </div>
           <div class="iconname">评论</div>
           <span class="rightcion">></span>
-        </li>
+        </router-link>
         <li>
           <div class="icon">
             <span class="iconfont" style="color: #f4ea2a">&#xe601;</span>

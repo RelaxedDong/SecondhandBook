@@ -1,106 +1,32 @@
 <template>
     <div>
+      <div style="padding-bottom: 1.5rem;" id="startpage"></div>
       <div class="commentBox">
-        回应(123)
+        回应(<span ref="counter">{{comments.length}}</span>)
         <div class="addcomment">
+          <alert class="alertbox"></alert>
           <span @click="returnreplay">切换回默认回复</span>
           <textarea :placeholder="placeholder" v-model="textareainput"></textarea>
           <button ref="replay" @click="replaynow">添加回应</button>
         </div>
-        <div class="comment-item">
-          <img src="https://donghaocms.oss-cn-beijing.aliyuncs.com/avater/20190105210459K.jpg" alt="">
+        <div class="comment-item" v-for="(comment, index) in comments" :key="comment.id">
+          <img :src="comment.author.avatar" alt="">
           <div class="comment-group">
             <div class="co-time">
-              <a href="">最美的烟火</a>
-              <span>2019/12/22</span>
+              <a href="">{{comment.author.username}}</a>
+              <span>{{comment.create_time}}</span>
             </div>
             <div class="comemnt-content">
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
+              {{comment.content}}
             </div>
-          </div>
-        </div>
-        <div class="comment-item">
-          <img src="https://donghaocms.oss-cn-beijing.aliyuncs.com/avater/20190105210459K.jpg" alt="">
-          <div class="comment-group">
-            <div class="co-time">
-              <a href="">最美的烟火1</a>
-              <span>2019/12/22</span>
-            </div>
-            <div class="comemnt-content">
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-            </div>
-            <div class="quto">
-              引用： <a href="">@最美的烟火1</a>的评论
-              <p>666</p>
+            <div v-if="comment.origin_comment.author.username" class="quto">
+              引用： <a href="">@{{comment.origin_comment.author.username}}</a>的评论
+              <p>{{comment.origin_comment.content}}</p>
             </div>
           </div>
           <div class="duoji-comment">
-            <button @click="delcomment">删除</button>
-            <button @click="replayBtnclick('最美的烟火')">回复</button>
-          </div>
-        </div>
-        <div class="comment-item">
-          <img src="https://donghaocms.oss-cn-beijing.aliyuncs.com/avater/20190105210459K.jpg" alt="">
-          <div class="comment-group">
-            <div class="co-time">
-              <a href="">最美的烟火2</a>
-              <span>2019/12/22</span>
-            </div>
-            <div class="comemnt-content">
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-            </div>
-            <div class="quto">
-              引用： <a href="">@最美的烟火1</a>的评论
-              <p>666</p>
-            </div>
-          </div>
-          <div class="duoji-comment">
-            <button @click="delcomment">删除</button>
-            <button @click="replayBtnclick('最美的烟火')">回复</button>
-          </div>
-        </div>
-        <div class="comment-item">
-          <img src="https://donghaocms.oss-cn-beijing.aliyuncs.com/avater/20190105210459K.jpg" alt="">
-          <div class="comment-group">
-            <div class="co-time">
-              <a href="">最美的烟火3</a>
-              <span>2019/12/22</span>
-            </div>
-            <div class="comemnt-content">
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-            </div>
-            <div class="quto">
-              引用： <a href="">@最美的烟火1</a>的评论
-              <p>666</p>
-            </div>
-          </div>
-          <div class="duoji-comment">
-            <button @click="delcomment">删除</button>
-            <button @click="replayBtnclick('最美的烟火')">回复</button>
-          </div>
-        </div>
-        <div class="comment-item">
-          <img src="https://donghaocms.oss-cn-beijing.aliyuncs.com/avater/20190105210459K.jpg" alt="">
-          <div class="comment-group">
-            <div class="co-time">
-              <a href="">最美的烟火4</a>
-              <span>2019/12/22</span>
-            </div>
-            <div class="comemnt-content">
-              demo:账号（邮箱: user10@qq.com 密码：111111 ）
-            </div>
-            <div class="quto">
-              引用： <a href="">@最美的烟火1</a>的评论
-              <p>666</p>
-            </div>
-          </div>
-          <div class="duoji-comment">
-            <button @click="delcomment">删除</button>
-            <button @click="replayBtnclick('最美的烟火')">回复</button>
+            <button @click="delcomment" :index="index" :comment-id="comment.id" v-if="current_userid === comment.author.id">删除</button>
+            <button @click="replayBtnclick(comment.author.username,comment.id)">回复</button>
           </div>
         </div>
       </div>
@@ -108,32 +34,86 @@
 </template>
 
 <script>
+import Alert from 'common/alert/Alert'
+import axios from 'axios'
 export default {
   name: 'DetailComment',
+  components: {Alert},
+  props: ['bookid', 'comments'],
+  comments: {
+    Alert
+  },
   data () {
     return {
       placeholder: '输入评论......',
-      textareainput: ''
+      textareainput: '',
+      commentId: '',
+      current_userid: ''
     }
   },
   methods: {
-    replayBtnclick (username) {
+    handleemit (message, color) {
+      this.$store.commit('msgchange', {message: message, color: color})
+    },
+    replayBtnclick (username, commentid) {
       this.$refs.replay.innerHTML = '回复:' + username
+      this.placeholder = '回复' + username + '的评论......'
+      this.commentId = commentid
     },
     returnreplay () {
       this.$refs.replay.innerHTML = '添加回应'
+      this.textareainput = ''
+      this.placeholder = '输入评论......'
+    },
+    handleaxiosPost (token, commentid = null) {
+      axios.post('/api/comment/', {token: token, comment: this.textareainput, bookid: this.bookid, commentid: commentid}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(this.HandleaxiosDone)
     },
     replaynow () {
-      console.log(this.$refs.replay.innerHTML)
-      if (this.$refs.replay.innerHTML === '添加回应') {
-        console.log('我是默认回复', this.textareainput)
-      } else {
-        console.log('我是回复other', this.textareainput)
+      var oldToken = JSON.parse(localStorage.getItem('token')).data
+      if (oldToken) {
+        if (this.$refs.replay.innerHTML === '添加回应') {
+          this.handleaxiosPost(oldToken)
+        } else {
+          this.handleaxiosPost(oldToken, this.commentId)
+        }
       }
+    },
+    HandleaxiosDone (res) {
+      this.comments.splice(0, 0, res.data)
+      document.querySelector('#startpage').scrollIntoView(true)
+      var value = this.$refs.counter.innerHTML
+      this.$refs.counter.innerHTML = parseInt(value) + 1
+      this.$refs.replay.innerHTML = '添加回应'
+      this.textareainput = ''
+      this.placeholder = '输入评论......'
     },
     delcomment (e) {
       var cur = e.target.parentElement.parentElement
       cur.parentNode.removeChild(cur)
+      var clickcommentid = e.target.getAttribute('comment-id')
+      var index = e.target.getAttribute('index')
+      this.comments.splice(index, 1)
+      this.$refs.counter.innerHTML -= 1
+      var oldToken = JSON.parse(localStorage.getItem('token')).data
+      axios.post('/api/delcomment/', {token: oldToken, commentid: clickcommentid}).then((res) => {
+        this.handleemit('删除成功~', '#b1ff5b')
+      })
+    },
+    currentUser (res) {
+      const data = res.data
+      if (data) {
+        this.current_userid = data.id
+      }
+    }
+  },
+  mounted () {
+    var oldToken = localStorage.getItem('token')
+    if (oldToken) {
+      axios.post('/api/userinfo/', {token: oldToken}).then(this.currentUser)
     }
   }
 }
@@ -179,9 +159,10 @@ export default {
       width 100%
       img
         float: left;
-        width: 10%
+        width .6rem
+        height .6rem
         margin-top: .1rem
-        border-radius 50%
+        border-radius 60%
       .comment-group
         float: left;
         width: 85%

@@ -7,6 +7,7 @@ import Upload from '@/pages/upload/Upload'
 import Sign from '@/pages/sign/Sign'
 import HomeBookSearch from '@/pages/search/BookSearch'
 import MyUpload from '@/pages/my/MyUpload'
+import MyComments from '@/pages/my/MyComments'
 
 Vue.use(Router)
 
@@ -44,6 +45,10 @@ export default new Router({
       path: '/search',
       name: 'HomeBookSearch',
       component: HomeBookSearch
+    }, {
+      path: '/comments',
+      name: 'MyComments',
+      component: MyComments
     }
   ]
 })
