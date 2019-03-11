@@ -31,8 +31,14 @@ export default {
     return {
       swiperOption: {
         loop: true,
-        pagination: '.swiper-pagination',
-        paginationType: 'fraction',
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: true
+        },
+        pagination: {
+          type: 'fraction',
+          el: '.swiper-pagination'
+        },
         // observer启动动态检查器(OB/观众/观看者)，当改变swiper的样式（例如隐藏/显示）或者修改swiper的子元素时，自动初始化swiper。
         // 默认false
         observer: true,

@@ -9,7 +9,7 @@
       <router-link to="/">
         <div class="iconfont back-icon header-fixed-back">返回 </div>
       </router-link>
-      景点详情
+      书籍详情
     </div>
   </div>
 </template>

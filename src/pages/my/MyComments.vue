@@ -29,8 +29,7 @@
                 <img :src="comment.book.images[0].url" alt="">
               </div>
             </div>
-            <div class="commentbox" @click="deleteBoxclick">
-              {{comment.content}}
+            <div class="commentbox" @click="deleteBoxclick" v-html="$options.filters.filemotion(comment.content)">
             </div>
             <div v-show="deleteBtnshow" class="buttonbox">
               <button @click="DeleteBtn" :comment-id="comment.id">删除</button>
@@ -64,6 +63,14 @@ export default {
     if (oldToken) {
       this.oldToken = oldToken
       axios.post('/api/mycomments/', {token: oldToken}).then(this.handleaxios)
+    }
+  },
+  filters: {
+    filemotion (value) {
+      value = value.replace(/##(.+?)##/g, (e, e1) => {
+        return '<img src="http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/' + e1 + '">'
+      })
+      return value
     }
   },
   methods: {

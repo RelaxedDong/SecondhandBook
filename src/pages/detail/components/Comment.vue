@@ -31,7 +31,7 @@
             </div>
             <div v-if="comment.origin_comment.author.username" class="quto">
               引用： <a href="">@{{comment.origin_comment.author.username}}</a>的评论
-              <p>{{comment.origin_comment.content}}</p>
+              <p v-html="$options.filters.filemotion(comment.origin_comment.content)"></p>
             </div>
           </div>
           <div class="duoji-comment">
@@ -92,6 +92,7 @@ export default {
       this.$store.commit('msgchange', {message: message, color: color})
     },
     replayBtnclick (username, commentid) {
+      this.isshowArea = true
       this.$refs.replay.innerHTML = '回复:' + username
       this.placeholder = '回复' + username + '的评论......'
       this.commentId = commentid
@@ -120,6 +121,7 @@ export default {
     },
     HandleaxiosDone (res) {
       this.comments.splice(0, 0, res.data)
+      this.isshowArea = false
       document.querySelector('#startpage').scrollIntoView(true)
       var value = this.$refs.counter.innerHTML
       this.$refs.counter.innerHTML = parseInt(value) + 1

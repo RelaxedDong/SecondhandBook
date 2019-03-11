@@ -20,7 +20,8 @@
                 <router-link tag="span" class="username" to="/userdetail">
                   {{item.owner.username}}
                 </router-link>
-                <span class="price"><img @click="hanto" src="../../../../static/iconimg/元.png" alt="" class="yuan">
+                <span class="price">
+                  <span class="iconfont yuan">&#xe641;</span>
                 <b class="pricenumber">{{item.price}}</b>
                 </span>
               </div>
@@ -35,11 +36,6 @@
 export default {
   name: 'HomeBookList',
   props: ['hotlist', 'page'],
-  methods: {
-    hanto () {
-      console.log('123')
-    }
-  },
   filters: {
     desccut (desc) {
       if (desc.length > 70) {
@@ -66,7 +62,7 @@ export default {
       overflow hidden
       .item-img
         width 2.0rem
-        height 2.7rem
+        height 2.8rem
         padding .1rem
     .item-info
       min-width 0
@@ -74,15 +70,19 @@ export default {
       padding .1rem
       .item-title
         z-index 123
-        line-height .54rem
+        line-height: 1.4em;
+        color: #333;
         font-size .32rem
       .item-desc
+        min-height 1.5rem
+        margin-top .1rem
+        color #c4c9c6
         line-height .4rem
-        color #ccc
       .userinfo
         margin-top .1rem
         .username
-          color #ff5d65
+          color: #363434;
+          line-height: 1.4em;
           margin-left .1rem
         .userimg
           width .5rem
@@ -91,9 +91,10 @@ export default {
         .price
           float right
           margin .1rem
-          color #e215ff
           .yuan
+            color #ff92b2
             margin-bottom .15rem
           .pricenumber
-            font-size .35rem
+            color #ff92b2
+            font-size .3.5rem
 </style>

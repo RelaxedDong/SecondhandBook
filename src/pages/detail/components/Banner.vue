@@ -5,7 +5,7 @@
            class="banner-img" alt="">
       <div class="banner-info">
         <div class="banner-title">{{bookname}}</div>
-        <div class="banner-number"><span style="color: #ff92b2" class="iconfont banner-icon">&#xe6c4;</span>39</div>
+        <div class="banner-number"><span class="iconfont banner-icon">&#xe6bc;</span>{{images.length}}</div>
       </div>
     </div>
     <fade>

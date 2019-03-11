@@ -29,13 +29,6 @@
           <div class="iconname"> 我的上传</div>
           <span class="rightcion">></span>
         </router-link>
-        <li>
-          <div class="icon">
-            <span class="iconfont" style="color: #ff90cd">&#xe6c4;</span>
-          </div>
-          <div class="iconname">喜欢</div>
-          <span class="rightcion">></span>
-        </li>
         <router-link tag="li" to="/comments">
           <div class="icon">
             <span class="iconfont" style="color: #77ff5e">&#xe608;</span>
@@ -43,13 +36,6 @@
           <div class="iconname">评论</div>
           <span class="rightcion">></span>
         </router-link>
-        <li>
-          <div class="icon">
-            <span class="iconfont" style="color: #f4ea2a">&#xe601;</span>
-          </div>
-          <div class="iconname">收藏</div>
-          <span class="rightcion">></span>
-        </li>
         <li @click="HandleInfochange">
           <div class="icon">
             <span class="iconfont" style="color: #c48dc3">&#xe61b;</span>
@@ -57,13 +43,13 @@
           <div class="iconname">编辑信息</div>
           <span class="rightcion">></span>
         </li>
+        <li>
+          <div class="logout" v-show="isLogin" @click="handlelogout">退出登录</div>
+          <div class="logout" v-show="!isLogin">
+            <router-link to="/sign">登陆</router-link>
+          </div>
+        </li>
       </ul>
-      <div class="logout" v-show="!isLogin">
-        <router-link to="/sign">登陆</router-link>
-      </div>
-      <div class="logout" v-show="isLogin">
-        <div @click="handlelogout">退出登录</div>
-      </div>
     </div>
   </div>
 </template>

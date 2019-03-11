@@ -5,8 +5,6 @@
       <swiper-slide v-for ='item of swiperList' :key="item.id">
         <img class="swiper-img" :src="item.url" alt="">
       </swiper-slide>
-      <!-- Optional controls -->
-      <div class="swiper-pagination"  slot="pagination"></div>
     </swiper>
   </div>
 </template>
@@ -18,7 +16,16 @@ export default {
     return {
       swiperOption: {
         loop: true,
-        pagination: '.swiper-pagination'
+        effect: 'fade',
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: true
+        },
+        on: {
+          click: function (e) {
+            window.open(e.target.src)
+          }
+        }
       },
       swiperList: [
         {
@@ -26,7 +33,7 @@ export default {
           url: 'http://www.read-cycling.org/wp-content/uploads/2018/01/FB_page_event_banner2018-02.jpg'
         }, {
           id: '456',
-          url: 'http://img0.kfzimg.com/operation/30/1d/301dee4f52183c9a5ac27100182f697f.jpg'
+          url: 'http://mp-piao-admincp.qunarzz.com/mp_piao_admin_mp_piao_admin/admin/20193/ed5f4115226306e48e6fad106a038afe.jpg_750x200_64df48d6.jpg'
         }
       ]
     }
