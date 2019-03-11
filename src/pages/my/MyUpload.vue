@@ -15,9 +15,9 @@
             <img :src="book.images[0].url" alt="">
           </div>
           <div class="boxinfo">
-            <div class="title">
+            <router-link class="title" :to="'/detail/' + book.id">
               {{book.name}}
-            </div>
+            </router-link>
             <div class="uploadtile">
               {{book.upload_time}}
             </div>
@@ -25,7 +25,7 @@
              ￥ {{book.price}}
             </div>
             <div class="buttonbox">
-              <button>删除</button>
+              <button @click="handleDelBookclick(book.id)">删除</button>
             </div>
           </div>
         </li>
@@ -40,13 +40,14 @@ export default {
   name: 'MyUpload',
   data () {
     return {
-      bookList: []
+      bookList: [],
+      oldToken: ''
     }
   },
   mounted () {
-    var oldToken = localStorage.getItem('token')
+    var oldToken = JSON.parse(localStorage.getItem('token')).data
     if (oldToken) {
-      console.log(oldToken)
+      this.oldToken = oldToken
       axios.post('/api/myupload/', {token: oldToken}).then(this.HandleaxiosDone)
       return false
     } else {
@@ -54,6 +55,11 @@ export default {
     }
   },
   methods: {
+    handleDelBookclick (bookid) {
+      axios.post('/api/delbook/', {bookid: bookid, token: this.oldToken}).then((res) => {
+        console.log(res)
+      })
+    },
     HandleaxiosDone (res) {
       const data = res.data.books
       console.log(data)

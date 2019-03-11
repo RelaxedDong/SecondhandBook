@@ -62,6 +62,9 @@ export default {
   methods: {
     handleAxiosSuccess (res) {
       if (res.data.length !== 0) {
+        if (res.data.length < 2) {
+          this.isLoading = false
+        }
         this.hotlist.push(res.data)
         this.start = this.start + 2
         this.page.push(this.start)

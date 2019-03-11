@@ -106,15 +106,17 @@ export default {
     handleimgClick (e) {
       var files = document.getElementById('imgBtn').files
       var _this = this
-      if (_this.images.length > 5 || files.length > 6) {
-        alert('最多上传6张图片')
+      if (_this.images.length > 2 || files.length > 3) {
+        this.handleemit('最多上传3张图片', '#F08080')
+        this.showfalsemessage()
         return false
       }
       for (var i = 0; i < files.length; i++) {
         var file = files[i]
         var imgType = file.type
         if (imgType !== 'image/jpeg' && imgType !== 'image/jpg' && imgType !== 'image/png') {
-          alert('第' + i + '张图片格式错误，请重新上传')
+          this.handleemit('含有格式错误图片，请重新上传', '#F08080')
+          this.showfalsemessage()
           return false
         }
         this.files.push(file)

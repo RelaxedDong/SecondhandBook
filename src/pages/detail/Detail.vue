@@ -1,10 +1,11 @@
 <template>
   <div>
+    <alert v-show="showalertbox" class="alertbox"></alert>
     <detail-banner :images="images" :bookname="bookname" :face="face"></detail-banner>
     <detail-header></detail-header>
-    <detail-book :book="book"></detail-book>
-    <detail-comment :bookid="book.id" :comments="comments"></detail-comment>
-  </div>
+      <detail-book :book="book"></detail-book>
+      <detail-comment :bookid="book.id" :comments="comments" @handlemsg="handlemsg"></detail-comment>
+    </div>
 </template>
 
 <script>
@@ -13,6 +14,7 @@ import DetailBanner from './components/Banner'
 import DetailBook from './components/Book'
 import DetailComment from './components/Comment'
 import axios from 'axios'
+import Alert from 'common/alert/Alert'
 export default {
   name: 'Detail',
   data () {
@@ -24,20 +26,32 @@ export default {
       face: '',
       bookname: '',
       comments: [],
-      commentslen: ''
+      commentslen: '',
+      showalertbox: false
     }
   },
   components: {
     DetailComment,
     DetailHeader,
     DetailBanner,
-    DetailBook
+    DetailBook,
+    Alert
   },
   mounted () {
     const id = this.$route.path.substr(8)
     axios.get('/api/bookdetail/?book_id=' + id).then(this.handleData)
   },
   methods: {
+    handlemsg (value, color) {
+      this.handleemit(value, color)
+    },
+    handleemit (message, color) {
+      this.$store.commit('msgchange', {message: message, color: color})
+      this.showalertbox = true
+      setTimeout(() => {
+        this.showalertbox = false
+      }, 2000)
+    },
     handleData (res) {
       const data = res.data
       this.comments = data.comments
@@ -55,6 +69,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  .alertbox
+    position fixed
+    top .86rem
+    left 0
+    right 0
   .content
     height 60rem
     overflow auto

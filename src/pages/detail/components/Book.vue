@@ -79,7 +79,7 @@ export default {
     .author_info
       margin-top .2rem
       .item
-        margin-top .2rem
+        margin-top .3rem
         .item_value
           display inline
           .iconfont
@@ -90,9 +90,9 @@ export default {
           font-size .3rem
           margin-right .2rem
     .sell_desc
-      margin-top .2rem
       padding-bottom 1rem
       overflow hidden
+      margin-top .8rem
       .desc
         margin-top .2rem
         word-break: break-all;
@@ -101,4 +101,5 @@ export default {
         font-size: .28rem;
         color: #616161;
         text-indent .2rem
+        min-height 1rem
 </style>

@@ -7,7 +7,7 @@
     </router-link>
     <div class="header-fixed" v-show="!showAbs"  :style="opacityStyle">
       <router-link to="/">
-        <div class="iconfont back-icon header-fixed-back">返回 </div>
+        <div class="iconfont back-icon header-fixed-back"><span class="iconfont">&#xe617;</span></div>
       </router-link>
       书籍详情
     </div>

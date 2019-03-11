@@ -1,8 +1,10 @@
 <template>
     <div>
       <div style="padding-bottom: 1.5rem;" id="startpage"></div>
-      <div class="commentBox">
-        回应(<span ref="counter">{{comments.length}}</span>)
+      <div class="commentBox" style="border: 0">
+        <div class="replaybox">
+          回应(<span ref="counter">{{comments.length}}</span>)
+        </div>
         <div class="addBtn" @click="showcommentBox">
           <span class="iconfont addicon">&#xe602;</span>
         </div>
@@ -12,7 +14,6 @@
               <img @click="emotionimgclick" :src="emotion.icon" alt="" :title="emotion.value">
             </span>
           </div>
-          <alert class="alertbox"></alert>
             <span @click="returnreplay" class="iconfont xunhuan">&#xe604;</span>
             <span @click="emotionBtnclick" class="iconfont">&#xe61d;</span>
             <span @click="closeareashow" class="iconfont close">&#xe613;</span>
@@ -35,8 +36,8 @@
             </div>
           </div>
           <div class="duoji-comment">
-            <button @click="delcomment" :index="index" :comment-id="comment.id" v-if="current_userid === comment.author.id">删除</button>
-            <button @click="replayBtnclick(comment.author.username,comment.id)">回复</button>
+            <button @click.passive="delcomment" :index="index" :comment-id="comment.id" v-if="current_userid === comment.author.id" class="iconfont">&#xe660;</button>
+            <button @click.passive="replayBtnclick(comment.author.username,comment.id)" class="iconfont">&#xe61c;</button>
           </div>
         </div>
       </div>
@@ -44,15 +45,11 @@
 </template>
 
 <script>
-import Alert from 'common/alert/Alert'
+
 import axios from 'axios'
 export default {
   name: 'DetailComment',
-  components: {Alert},
   props: ['bookid', 'comments'],
-  comments: {
-    Alert
-  },
   filters: {
     filemotion (value) {
       value = value.replace(/##(.+?)##/g, (e, e1) => {
@@ -79,7 +76,7 @@ export default {
       this.textareainput += '##' + emotiontag + '##'
     },
     emotionBtnclick () {
-      this.ishowemotion = true
+      this.ishowemotion = !this.ishowemotion
     },
     closeareashow () {
       this.isshowArea = false
@@ -87,9 +84,6 @@ export default {
     },
     showcommentBox () {
       this.isshowArea = true
-    },
-    handleemit (message, color) {
-      this.$store.commit('msgchange', {message: message, color: color})
     },
     replayBtnclick (username, commentid) {
       this.isshowArea = true
@@ -128,6 +122,7 @@ export default {
       this.$refs.replay.innerHTML = '添加回应'
       this.textareainput = ''
       this.placeholder = '输入评论......'
+      this.$emit('handlemsg', '回复成功~', '#b1ff5b')
     },
     delcomment (e) {
       var cur = e.target.parentElement.parentElement
@@ -138,7 +133,7 @@ export default {
       this.$refs.counter.innerHTML -= 1
       var oldToken = JSON.parse(localStorage.getItem('token')).data
       axios.post('/api/delcomment/', {token: oldToken, commentid: clickcommentid}).then((res) => {
-        this.handleemit('删除成功~', '#b1ff5b')
+        this.$emit('handlemsg', '删除成功~', '#b1ff5b')
       })
     },
     currentUser (res) {
@@ -254,7 +249,10 @@ export default {
         button
           color #ffffff
           background #7ec49e
-          padding .1rem
-          margin-right .1rem
+          padding 0 .1rem
+          box-sizing border-box
+          height .46rem
+          line-height .46rem
+
           border-radius .1rem
 </style>
