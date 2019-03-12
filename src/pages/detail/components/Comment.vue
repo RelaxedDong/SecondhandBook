@@ -2,13 +2,13 @@
     <div>
       <div style="padding-bottom: 1.5rem;" id="startpage"></div>
       <div class="commentBox" style="border: 0">
-        <div class="replaybox">
+        <div class="replaybox"  v-if="current_userid">
           回应(<span ref="counter">{{comments.length}}</span>)
         </div>
-        <div class="addBtn" @click="showcommentBox">
+        <div class="addBtn" @click="showcommentBox"  v-if="current_userid">
           <span class="iconfont addicon">&#xe602;</span>
         </div>
-        <div class="addcomment" v-show="isshowArea">
+        <div class="addcomment" v-show="isshowArea"  v-if="current_userid">
           <div class="emotionbox" v-show="ishowemotion">
             <span v-for="(emotion,index) in emotions" :key="index">
               <img @click="emotionimgclick" :src="emotion.icon" alt="" :title="emotion.value">
@@ -28,16 +28,16 @@
               <span>{{comment.create_time}}</span>
             </div>
             <div class="comemnt-content">
-              <span v-html="$options.filters.filemotion(comment.content)"></span>
-            </div>
+              <span v-html="$options.filters.filemotion(comment.content,emotions)"></span>
+          </div>
             <div v-if="comment.origin_comment.author.username" class="quto">
               引用： <a href="">@{{comment.origin_comment.author.username}}</a>的评论
-              <p v-html="$options.filters.filemotion(comment.origin_comment.content)"></p>
+              <p v-html="$options.filters.filemotion(comment.origin_comment.content,emotions)"></p>
             </div>
           </div>
           <div class="duoji-comment">
             <button @click.passive="delcomment" :index="index" :comment-id="comment.id" v-if="current_userid === comment.author.id" class="iconfont">&#xe660;</button>
-            <button @click.passive="replayBtnclick(comment.author.username,comment.id)" class="iconfont">&#xe61c;</button>
+            <button @click.passive="replayBtnclick(comment.author.username,comment.id)" class="iconfont" v-if="current_userid">&#xe61c;</button>
           </div>
         </div>
       </div>
@@ -51,9 +51,13 @@ export default {
   name: 'DetailComment',
   props: ['bookid', 'comments'],
   filters: {
-    filemotion (value) {
-      value = value.replace(/##(.+?)##/g, (e, e1) => {
-        return '<img src="http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/' + e1 + '">'
+    filemotion (value, emotions) {
+      value = value.replace(/(\[.+?\])/g, (e, e1) => {
+        for (var i in emotions) {
+          if ((emotions[i].value.indexOf(e1)) > -1) {
+            return '<img src="' + emotions[i].icon + '">'
+          }
+        }
       })
       return value
     }
@@ -71,9 +75,8 @@ export default {
   },
   methods: {
     emotionimgclick (e) {
-      const url = e.target.getAttribute('src')
-      const emotiontag = url.split('http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/')[1]
-      this.textareainput += '##' + emotiontag + '##'
+      const title = e.target.title
+      this.textareainput += title
     },
     emotionBtnclick () {
       this.ishowemotion = !this.ishowemotion
@@ -111,6 +114,9 @@ export default {
         } else {
           this.handleaxiosPost(oldToken, this.commentId)
         }
+      } else {
+        this.$emit('handlemsg', '请先登陆...', '#F08080')
+        return false
       }
     },
     HandleaxiosDone (res) {
@@ -150,6 +156,9 @@ export default {
     var oldToken = localStorage.getItem('token')
     if (oldToken) {
       axios.post('/api/userinfo/', {token: oldToken}).then(this.currentUser)
+    } else {
+      this.$refs.replay.innerHTML = '请先登录'
+      this.placeholder = '登陆后参与评论......'
     }
   }
 }

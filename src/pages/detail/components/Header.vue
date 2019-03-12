@@ -43,7 +43,6 @@ export default {
   },
   // 页面替换成新的页面时触发
   beforeDestroy () {
-    console.log('deactivated')
     window.removeEventListener('scroll', this.handleScroll)
   }
 }

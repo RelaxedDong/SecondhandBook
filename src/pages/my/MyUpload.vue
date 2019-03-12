@@ -8,6 +8,7 @@
       </div>
       我的上传
     </div>
+    <alert v-show="ishowalere" class="alertbox"></alert>
     <div class="content">
       <ul>
         <li class="bookbox" v-for="book in bookList" :key="book.id">
@@ -25,7 +26,7 @@
              ￥ {{book.price}}
             </div>
             <div class="buttonbox">
-              <button @click="handleDelBookclick(book.id)">删除</button>
+              <button @click="handleDelBookclick" :bookid="book.id">删除</button>
             </div>
           </div>
         </li>
@@ -36,12 +37,17 @@
 
 <script>
 import axios from 'axios'
+import Alert from 'common/alert/Alert'
 export default {
   name: 'MyUpload',
+  components: {
+    Alert
+  },
   data () {
     return {
       bookList: [],
-      oldToken: ''
+      oldToken: '',
+      ishowalere: false
     }
   },
   mounted () {
@@ -55,21 +61,31 @@ export default {
     }
   },
   methods: {
-    handleDelBookclick (bookid) {
+    handleemit (message, color) {
+      this.$store.commit('msgchange', {message: message, color: color})
+      this.ishowalere = true
+    },
+    handleDelBookclick (e) {
+      var cur = e.target.parentNode.parentNode.parentNode
+      cur.parentNode.removeChild(cur)
+      var bookid = e.target.getAttribute('bookid')
       axios.post('/api/delbook/', {bookid: bookid, token: this.oldToken}).then((res) => {
-        console.log(res)
+        this.handleemit('删除成功~', '#b1ff5b')
       })
     },
     HandleaxiosDone (res) {
-      const data = res.data.books
-      console.log(data)
-      this.bookList = data
+      this.bookList = res.data.books
     }
   }
 }
 </script>
 
 <style scoped lang="stylus">
+  .alertbox
+    position fixed
+    top 0
+    left 0
+    right 0
   .header
     width 100%
     height .86rem

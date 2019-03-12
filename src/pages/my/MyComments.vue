@@ -29,7 +29,7 @@
                 <img :src="comment.book.images[0].url" alt="">
               </div>
             </div>
-            <div class="commentbox" @click="deleteBoxclick" v-html="$options.filters.filemotion(comment.content)">
+            <div class="commentbox" @click="deleteBoxclick" v-html="$options.filters.filemotion(comment.content,emotions)">
             </div>
             <div v-show="deleteBtnshow" class="buttonbox">
               <button @click="DeleteBtn" :comment-id="comment.id">删除</button>
@@ -55,7 +55,8 @@ export default {
       deleteBtnshow: false,
       comments: [],
       oldToken: '',
-      ishowalere: false
+      ishowalere: false,
+      emotions: []
     }
   },
   mounted () {
@@ -64,11 +65,18 @@ export default {
       this.oldToken = oldToken
       axios.post('/api/mycomments/', {token: oldToken}).then(this.handleaxios)
     }
+    axios.get('/api/emotions/').then((res) => {
+      this.emotions = res.data.data
+    })
   },
   filters: {
-    filemotion (value) {
-      value = value.replace(/##(.+?)##/g, (e, e1) => {
-        return '<img src="http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/' + e1 + '">'
+    filemotion (value, emotions) {
+      value = value.replace(/(\[.+?\])/g, (e, e1) => {
+        for (var i in emotions) {
+          if ((emotions[i].value.indexOf(e1)) > -1) {
+            return '<img src="' + emotions[i].icon + '">'
+          }
+        }
       })
       return value
     }
@@ -99,6 +107,7 @@ export default {
 <style scoped lang="stylus">
   .alertbox
     position fixed
+    line-height 1rem
     top 0
     left 0
     right 0

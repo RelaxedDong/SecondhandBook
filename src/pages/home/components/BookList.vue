@@ -1,7 +1,7 @@
 <template>
   <div >
     <div class="title">
-      低价推荐
+      <span class="iconfont iconfontic">&#xe67c;</span>低价推荐
     </div>
     <div>
         <ul class="content" v-for="(p,index) in page" :key="index">
@@ -17,9 +17,7 @@
                 {{item.desc|desccut}}</p>
               <div class="userinfo">
                 <img :src="item.owner.avatar" alt="" class="userimg">
-                <router-link tag="span" class="username" to="/userdetail">
-                  {{item.owner.username}}
-                </router-link>
+                <span class="username"></span>  {{item.owner.username}}
                 <span class="price">
                   <span class="iconfont yuan">&#xe641;</span>
                 <b class="pricenumber">{{item.price}}</b>
@@ -54,6 +52,10 @@ export default {
     background #eee
     margin-top .2rem
     text-indent .2rem
+    .iconfontic
+      color #ff8e87
+      font-size .5rem
+      margin-right .1rem
   .content
     z-index 9999
     .item

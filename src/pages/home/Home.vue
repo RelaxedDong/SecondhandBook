@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-      <router-link to="/search">
+      <router-link to="/search" id="start">
         <search></search>
       </router-link>
       <div ref="wrapper" class="wrapper">
@@ -13,6 +13,7 @@
         </div>
       </div>
     <pagefooter></pagefooter>
+    <div class="gototop" v-if="topbtn"><button @click="clicktoTop"><span class="iconfont">&#xe63d;</span></button></div>
   </div>
 </template>
 
@@ -56,17 +57,28 @@ export default {
       axios.get('/api/booklist/?start=' + this.start).then(this.handleAxiosSuccess)
       this.isLoading = true
     })
+    this.scroll.on('scroll', (pos) => {
+      if (pos.y < -2500) {
+        this.topbtn = true
+      } else {
+        this.topbtn = false
+      }
+    })
     this.isLoading = true
     axios.get('/api/booklist/?start=' + this.start).then(this.handleAxiosSuccess)
   },
   methods: {
+    clicktoTop () {
+      this.scroll.scrollTo(0, 0, 1234)
+    },
     handleAxiosSuccess (res) {
-      if (res.data.length !== 0) {
-        if (res.data.length < 2) {
+      var data = res.data.data
+      if (data.length !== 0) {
+        if (data.length < 2) {
           this.isLoading = false
         }
-        this.hotlist.push(res.data)
-        this.start = this.start + 2
+        this.hotlist.push(data)
+        this.start = this.start + this.per_page
         this.page.push(this.start)
         this.scroll.finishPullUp()
       } else {
@@ -79,9 +91,11 @@ export default {
     return {
       hotlist: [],
       start: 0,
+      per_page: 10,
       end: false,
       page: [],
-      isLoading: false
+      isLoading: false,
+      topbtn: false
     }
   }
 }
@@ -95,4 +109,15 @@ export default {
     color #8e8aff
     margin-top .3rem
     padding-bottom .2rem
+  .gototop
+    position fixed
+    right 0
+    bottom 1rem
+    margin .1rem
+    button
+      background #ffc043
+      color #fff4f7
+      border-radius .1rem
+      padding .1rem .2rem
+      box-sizing border-box
 </style>
