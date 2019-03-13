@@ -108,7 +108,7 @@ export default {
   .alertbox
     position fixed
     line-height 1rem
-    top 0
+    bottom  0
     left 0
     right 0
   .header
