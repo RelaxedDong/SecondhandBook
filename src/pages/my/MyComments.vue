@@ -1,15 +1,10 @@
 <template>
   <div>
     <div class="header">
-      <div class="left">
-        <router-link to="/me" tag="span">
-          返回
-        </router-link>
-      </div>
       我的评论
     </div>
     <alert v-show="ishowalere" class="alertbox"></alert>
-    <div class="content">
+    <div class="content" v-if="comments.length>0">
       <ul>
         <li class="bookbox" v-for="comment in comments" :key="comment.id">
           <div class="boxinfo">
@@ -25,7 +20,7 @@
                   ￥ {{comment.book.price}}
                 </div>
               </div>
-              <div class="right">
+              <div class="right" @click="deleteBoxclick">
                 <img :src="comment.book.images[0].url" alt="">
               </div>
             </div>
@@ -37,6 +32,9 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div v-else class="none">
+      空空如也......
     </div>
   </div>
 </template>
@@ -111,6 +109,10 @@ export default {
     bottom  0
     left 0
     right 0
+  .none
+    margin-top .5rem
+    text-align center
+    color #85846c
   .header
     width 100%
     height .86rem

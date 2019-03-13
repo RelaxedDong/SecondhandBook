@@ -1,15 +1,10 @@
 <template>
   <div>
     <div class="header">
-      <div class="left">
-        <router-link to="/me" tag="span">
-          返回
-        </router-link>
-      </div>
       我的上传
     </div>
     <alert v-show="ishowalere" class="alertbox"></alert>
-    <div class="content">
+    <div class="content" v-if="bookList.length>0">
       <ul>
         <li class="bookbox" v-for="book in bookList" :key="book.id">
           <div class="imgbox">
@@ -31,6 +26,9 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div v-else class="none">
+      空空如也......
     </div>
   </div>
 </template>
@@ -86,6 +84,10 @@ export default {
     bottom  0
     left 0
     right 0
+  .none
+    margin-top .5rem
+    text-align center
+    color #85846c
   .header
     width 100%
     height .86rem
