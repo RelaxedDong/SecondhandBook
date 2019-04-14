@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://127.0.0.1:5000',  //目标接口域名
+        target: 'http://www.donghao.club',  //目标接口域名
         changeOrigin: true,  //是否跨域
         pathRewrite: {
           '^/api': '/v1/api/'   //重写接口

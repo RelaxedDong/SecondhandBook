@@ -41,7 +41,7 @@ export default {
       click: true,
       bounceTime: 100,
       pullUpLoad: {
-        // 当上拉距离超过盒子高度的10px的时候,就派发一个上拉加载的事件
+        // 当上拉距离超过盒子高度的的时候,就派发一个上拉加载的事件
         threshold: 0
       },
       momentum: true,
